@@ -72,6 +72,10 @@ public class App {
         return childrenResult;
     }
 
+    public static boolean notApplicableString(String str) {
+        return str.contains("N/A") || str.contains("TBA");
+    }
+
     public static String getDepartment(Node rowNode) {
         // We're going to assume that if this is called rowNode is title row (contains a nested TextNode with a department)
         String dirtyTitle = extractString(rowNode); // Title from node that may contain suffix: "***Continued***"
@@ -85,7 +89,7 @@ public class App {
 
     public static LocalTime parseTimeFromMorningAfternoonRep(String str) {
 
-        if (str.contains("N/A") || str.contains("TBA"))
+        if (notApplicableString(str))
             return null;
 
         String[] timeParts = str.trim().split(" ");
@@ -116,9 +120,10 @@ public class App {
 
         EnumSet<Day> days = Day.setFromString(extractString(meetingRow.childNode(10)));
 
-        int spanOffset = days.isEmpty() && !extractString(meetingRow.childNode(11)).contains("N/A") ? 1 : 0;
+        String canary = extractString(meetingRow.childNode(11));
+        int spanOffset = days.isEmpty() && !notApplicableString(canary) && !canary.contains("-") ? -1 : 0;
 
-        String[] timeStrings = extractString(meetingRow.childNode(11 - spanOffset)).split("-");
+        String[] timeStrings = extractString(meetingRow.childNode(11 + spanOffset)).split("-");
         LocalTime startTime = parseTimeFromMorningAfternoonRep(timeStrings[0]);
 
         LocalTime endTime = (startTime == null) ? null : parseTimeFromMorningAfternoonRep(timeStrings[1]);
@@ -129,7 +134,7 @@ public class App {
         Building building;
         Location meetingLoc;
 
-        if (locationStrings[0].contains("TBA")) {
+        if (notApplicableString(locationStrings[0]) || locationStrings[0].contains("OFF")) {
             building = null;
             meetingLoc = null;
         }
@@ -225,7 +230,9 @@ public class App {
         List<Meeting> meetings = new ArrayList<>();
         populateMeetings(meetings, rowNode);
 
-        int spanOffset = (meetings.get(0).days().isEmpty()) && !extractString(rowNode.childNode(11)).contains("N/A") ? 1 : 0;
+        String canary = extractString(rowNode.childNode(11));
+
+        int spanOffset = (meetings.get(0).days().isEmpty()) && !notApplicableString(canary) && !canary.contains("-") ? -1 : 0;
 
         int seatCap = Integer.parseInt(extractString(rowNode.childNode(12 + spanOffset)));
         int seatAvail = Integer.parseInt(extractString(rowNode.childNode(13 + spanOffset)));

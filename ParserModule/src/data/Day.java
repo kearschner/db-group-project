@@ -32,6 +32,8 @@ public enum Day {
 				case 'U':
 					set.add(SUN);
 					break;
+				default:
+					return EnumSet.noneOf(Day.class);
 			}
 		}
 
