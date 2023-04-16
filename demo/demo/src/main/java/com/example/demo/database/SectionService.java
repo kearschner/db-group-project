@@ -20,7 +20,6 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
     }
 
-    @PostConstruct
     public void populateFromOasis() throws IOException {
         Document doc = createHTMLDocFromFile("Look Up Classes.htm");
         List<Section> sections = parseSectionsFromDocument(doc);
