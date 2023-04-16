@@ -1,10 +1,19 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 
 const SubjectSelect = () => {
-    const subjects = [
-        'ACG - Accounting:General',
-        'ADE - Adult Education',
-    ];
+
+
+    const [subjects, setSubjects] = useState([]);
+
+    useEffect(() => {
+        async function fetchSubjects() {
+            const response = await fetch('/api/subjects');
+            const data = await response.json();
+            setSubjects(data);
+        }
+        fetchSubjects();
+    }, []);
 
     const handleSubjectChange = (event) => {
         console.log('Selected subject:', event.target.value);

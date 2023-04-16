@@ -14,6 +14,7 @@ function App() {
         }
         fetchInstructors();
     }, []);
+
     return (
         <div className="App">
             <header className="App-header">
@@ -110,7 +111,7 @@ function App() {
                                 className="select-instructor"
                             >
                                 {instructors.map((instructor, index) => (
-                                    <option key={index} value={instructor.name}>{instructor.name}</option>
+                                    <option key={index} value={instructor}>{instructor}</option>
                                 ))}
                             </select>
                         </div>
