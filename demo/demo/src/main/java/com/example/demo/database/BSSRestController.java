@@ -1,9 +1,7 @@
 package com.example.demo.database;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.data.Section;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -12,13 +10,11 @@ import java.util.List;
 public class BSSRestController {
 
     private final InstructorRepository instructorRepository;
-    private final SubjectRepository subjectRepository;
     private final CourseRepository courseRepository;
     private final LocationRepository locationRepository;
 
-    public BSSRestController(InstructorRepository instructorRepository, SubjectRepository subjectRepository, CourseRepository courseRepository, LocationRepository locationRepository) {
+    public BSSRestController(InstructorRepository instructorRepository, CourseRepository courseRepository, LocationRepository locationRepository) {
         this.instructorRepository = instructorRepository;
-        this.subjectRepository = subjectRepository;
         this.courseRepository = courseRepository;
         this.locationRepository = locationRepository;
     }
@@ -31,8 +27,7 @@ public class BSSRestController {
 
     @GetMapping("/subjects")
     public List<String> getSubjects() {
-        return subjectRepository.findAllSubjectCodes();
-        //return subjectRepository.findAll(Sort.by(Sort.Direction.ASC, "subjectCode"));
+        return courseRepository.findAllSubjectCodes();
     }
 
     @GetMapping("/departments")
@@ -43,6 +38,25 @@ public class BSSRestController {
     @GetMapping("/campuses")
     public List<String> getCampuses() {
         return locationRepository.getCampuses();
+    }
+
+    @GetMapping("/attributes")
+    public List<String> getAttributes() {
+        return courseRepository.findAllAttributes();
+    }
+
+    @PostMapping("/section-lookup")
+    public List<Section> lookupSections(@RequestBody SectionLookupDTO secDTO) {
+        System.out.println(secDTO.attributes());
+
+        return null;
+    }
+
+
+    private static <T> T nullDefault(T value, T defaultValue) {
+        if (value == null) return defaultValue;
+
+        return value;
     }
 
 }

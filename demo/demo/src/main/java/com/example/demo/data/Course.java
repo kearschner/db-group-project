@@ -9,22 +9,20 @@ import java.util.Set;
 
 @Entity
 @Immutable
+@IdClass(CourseId.class)
 @Table(name = "Course")
 public final class Course {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "courseid")
-	private final Long courseId;
+	@Column(name = "subject")
+	private final String subject;
 
-	@Column(name = "title")
-	private final String title;
-
+	@Id
 	@Column(name = "course_number")
 	private final String courseNumber;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "code")
-	private final Subject subject;
+	@Column(name = "title")
+	private final String title;
 
 	@Column(name = "credits")
 	private final int credits;
@@ -35,40 +33,30 @@ public final class Course {
 	@Column(name = "permit_required")
 	private final boolean permitRequired;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-		name = "Course_All_Attributes",
-		joinColumns = { @JoinColumn(name = "courseid") },
-		inverseJoinColumns = { @JoinColumn(name = "attributeid") }
-	)
-	private final Set<CourseAttribute> allAttributes;
+	@Column(name = "attributes")
+	@ElementCollection
+	private final Set<String> attributes;
 
 	public Course(
-					Long courseId,
-					String title,
+					String subject,
 					String courseNumber,
-					Subject subject,
+					String title,
 					int credits,
 					String department,
 					boolean permitRequired,
-					Set<CourseAttribute> allAttributes
+					Set<String> attributes
 	) {
-		this.courseId = courseId;
 		this.title = title;
 		this.courseNumber = courseNumber;
 		this.subject = subject;
 		this.credits = credits;
 		this.department = department;
 		this.permitRequired = permitRequired;
-		this.allAttributes = allAttributes;
+		this.attributes = attributes;
 	}
 
 	public Course() {
-		this(null, "","", null, 0, "", false, null);
-	}
-
-	public Long courseId() {
-		return courseId;
+		this("","", "", 0, "", false, null);
 	}
 
 	public String title() {
@@ -79,7 +67,7 @@ public final class Course {
 		return courseNumber;
 	}
 
-	public Subject subject() {
+	public String subject() {
 		return subject;
 	}
 
@@ -95,8 +83,8 @@ public final class Course {
 		return permitRequired;
 	}
 
-	public Set<CourseAttribute> allAttributes() {
-		return allAttributes;
+	public Set<String> attributes() {
+		return attributes;
 	}
 
 	@Override
@@ -104,31 +92,29 @@ public final class Course {
 		if (obj == this) return true;
 		if (obj == null || obj.getClass() != this.getClass()) return false;
 		var that = (Course) obj;
-		return Objects.equals(this.courseId, that.courseId) &&
-				Objects.equals(this.title, that.title) &&
+		return	Objects.equals(this.title, that.title) &&
 				Objects.equals(this.courseNumber, that.courseNumber) &&
 				Objects.equals(this.subject, that.subject) &&
 				this.credits == that.credits &&
 				Objects.equals(this.department, that.department) &&
 				this.permitRequired == that.permitRequired &&
-				Objects.equals(this.allAttributes, that.allAttributes);
+				Objects.equals(this.attributes, that.attributes);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(courseId, title, courseNumber, subject, credits, department, permitRequired, allAttributes);
+		return Objects.hash(title, courseNumber, subject, credits, department, permitRequired, attributes);
 	}
 
 	@Override
 	public String toString() {
 		return "Course[" +
-				"courseId=" + courseId + ", " +
 				"title=" + title + ", " +
 				"courseNumber=" + courseNumber + ", " +
 				"subject=" + subject + ", " +
 				"credits=" + credits + ", " +
 				"department=" + department + ", " +
 				"permitRequired=" + permitRequired + ", " +
-				"allAttributes=" + allAttributes + ']';
+				"allAttributes=" + attributes + ']';
 	}
 }

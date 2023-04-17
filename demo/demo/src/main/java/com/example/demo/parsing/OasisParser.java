@@ -189,31 +189,21 @@ public class OasisParser {
         return new InstructorsParseResult(primary, allIns);
     }
 
-    record AttributesParseResult(FundingAttribute funding, CourseAttribute[] all) {}
-    public static AttributesParseResult parseAttributes(String[] attributeStrings) {
-    
-        FundingAttribute funding = null;
-        CourseAttribute[] allAtrib = new CourseAttribute[attributeStrings.length];
-        for (int i = 0; i < allAtrib.length; i++) {
-            CourseAttribute currAtrib;
-            int fundingIndicator = attributeStrings[i].indexOf("Funding:");
-            if (fundingIndicator >= 0) {
-                funding = new FundingAttribute(attributeStrings[i].trim());
-                currAtrib = funding;
-            } else {
-                currAtrib = new CourseAttribute(null, attributeStrings[i].trim());
-            }
-            allAtrib[i] = currAtrib;
+    public static List<String> parseAttributes(String[] attributeStrings) {
+
+        List<String> allAtrib= new ArrayList<>(attributeStrings.length);
+        for (String atrib : attributeStrings) {
+            allAtrib.add(atrib.trim());
         }
-        
-        return new AttributesParseResult(funding, allAtrib);
+
+        return allAtrib;
     }
 
     record SectionResult(Section sec, int numMeets) {}
     public static SectionResult getSection(Node rowNode, String department) {
 
         String crn = extractString(rowNode.childNode(1));
-        Subject subject = new Subject(extractString(rowNode.childNode(2)), "");
+        String subject = extractString(rowNode.childNode(2));
         String courseNumber = extractString(rowNode.childNode(3));
         String sectionNumber = extractString(rowNode.childNode(4));
         int credits = extractLowerCredits(extractString(rowNode.childNode(5)));
@@ -238,9 +228,9 @@ public class OasisParser {
 
         InstructorsParseResult instructorsResults = parseInstructors(extractString(rowNode.childNode(16 + spanOffset)).split(","));
 
-        AttributesParseResult attributesResults = parseAttributes(extractString(rowNode.childNode(19 + spanOffset)).split("and"));
+        List<String> attributesResults = parseAttributes(extractString(rowNode.childNode(19 + spanOffset)).split("and"));
 
-        Course course = new Course(null, courseTitle, courseNumber, subject, credits, department, permitRequired, Set.of(attributesResults.all()));
+        Course course = new Course(subject, courseNumber, courseTitle, credits, department, permitRequired, new HashSet<>(attributesResults));
 
 
         return new SectionResult(new Section(crn, course, sectionNumber, startDate, endDate, waitAvail, waitCap, seatAvail, seatCap, method, instructorsResults.primary(), Set.of(instructorsResults.all()), new HashSet<>(meetings)), meetings.size());

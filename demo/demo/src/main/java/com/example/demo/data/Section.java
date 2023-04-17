@@ -1,17 +1,6 @@
 package com.example.demo.data;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
 
 import java.time.LocalDate;
@@ -27,7 +16,10 @@ public final class Section {
 	private final String crn;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "courseid")
+	@JoinColumns({
+			@JoinColumn(name = "target_subject", referencedColumnName = "subject"),
+			@JoinColumn(name = "target_course_number", referencedColumnName = "course_number")
+	})
 	private final Course forCourse;
 
 	@Column(name = "section_number")
