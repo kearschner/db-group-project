@@ -53,10 +53,4 @@ public class BSSRestController {
     }
 
 
-    private static <T> T nullDefault(T value, T defaultValue) {
-        if (value == null) return defaultValue;
-
-        return value;
-    }
-
 }

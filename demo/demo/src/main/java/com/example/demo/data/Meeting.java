@@ -1,37 +1,40 @@
 package com.example.demo.data;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalTime;
 import java.util.EnumSet;
 import java.util.Objects;
 
 @Entity
-@Immutable
 @Table(name = "Meeting")
 public final class Meeting {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "meetingid")
 	private final Long id;
 
 	@Column(name = "start_time")
+	@NaturalId
 	private final LocalTime startTime;
 
 	@Column(name = "end_time")
+	@NaturalId
 	private final LocalTime endTime;
 
 	@Column(name = "days")
+	@NaturalId
 	private final String days;
 
 	@Transient
 	private final EnumSet<Day> daySet;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@NaturalId
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "locid")
-	private final Location location;
+	private Location location;
 
 	public Meeting(
 			Long id,
@@ -71,6 +74,9 @@ public final class Meeting {
 	public Location location() {
 		return location;
 	}
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -96,4 +102,5 @@ public final class Meeting {
 				"days=" + days + ", " +
 				"location=" + location + ']';
 	}
+
 }

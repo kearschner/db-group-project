@@ -3,6 +3,7 @@ package com.example.demo.data;
 import org.hibernate.annotations.Immutable;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.Objects;
 
@@ -11,16 +12,20 @@ import java.util.Objects;
 @Table(name = "Location")
 public final class Location {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "locid")
 	private final Long id;
+
 	@Column(name = "campus")
+	@NaturalId
 	private final String campus;
 
 	@Column(name = "building")
+	@NaturalId
 	private final String building;
 
 	@Column(name = "room_number")
+	@NaturalId
 	private final String roomNumber;
 
 	public Location(

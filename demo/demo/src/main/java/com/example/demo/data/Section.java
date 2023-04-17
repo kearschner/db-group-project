@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.Objects;
 
 @Entity
-@Immutable
 @Table(name = "Section")
 public final class Section {
 	@Id
@@ -65,7 +64,7 @@ public final class Section {
 			joinColumns = { @JoinColumn(name = "crn") },
 			inverseJoinColumns = { @JoinColumn(name = "meetingid") }
 	)
-	private final Set<Meeting> meets;
+	private Set<Meeting> meets;
 
 	public Section(String crn,
 				   Course forCourse,
@@ -150,6 +149,10 @@ public final class Section {
 
 	public Set<Meeting> meets() {
 		return meets;
+	}
+
+	public void setMeets(Set<Meeting> meets) {
+		this.meets = meets;
 	}
 
 	@Override
