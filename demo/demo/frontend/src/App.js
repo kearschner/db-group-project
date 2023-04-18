@@ -44,7 +44,13 @@ function App() {
         setSecFormData((prevData) => ({
             ...prevData , [name]: value
         }));
-        console.log(secFormData);
+    }
+
+    function handleSecFormChangeBox(event) {
+        const {name, checked} = event.target;
+        setSecFormData((prevData) => ({
+            ...prevData , [name]: checked
+        }));
     }
 
     function handleSecFormChangeSelection(event) {
@@ -58,7 +64,6 @@ function App() {
         setSecFormData((prevData) => ({
             ...prevData , [name]: selectedValues
         }));
-        console.log(secFormData);
     }
 
     return (
@@ -266,6 +271,7 @@ function App() {
                                 <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                                     <label htmlFor="start-time-am-pm" style={{ fontSize: '12px', marginRight: '-155px' , marginLeft: '150px' }}>AM/PM:</label>
                                     <select id="start-time-am-pm" name="start-time-am-pm" onChange={handleSecFormChange} style={{ width: '50px' }}>
+                                        <option value="">--</option>
                                         <option value="am">AM</option>
                                         <option value="pm">PM</option>
 
@@ -319,6 +325,7 @@ function App() {
                                 <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                                     <label htmlFor="end-time-am-pm" style={{ fontSize: '12px', marginRight: '-155px', marginLeft: '150px' }}>AM/PM:</label>
                                     <select id="end-time-am-pm" name="end-time-am-pm" onChange={handleSecFormChange} style={{ width: '50px' }}>
+                                        <option value="">--</option>
                                         <option value="am">AM</option>
                                         <option value="pm">PM</option>
                                     </select>
@@ -334,7 +341,7 @@ function App() {
                                             type="checkbox"
                                             id={`day-${index}`}
                                             name={`day-${index}`}
-                                            onChange={handleSecFormChange}
+                                            onChange={handleSecFormChangeBox}
                                             style={{ marginRight: '-50px' }} // Adjust the marginRight value to 0.5cm
                                         />
                                         <label htmlFor={`day-${index}`} style={{ fontSize: '12px' }}>{day}</label>
