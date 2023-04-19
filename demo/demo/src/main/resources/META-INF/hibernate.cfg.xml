@@ -1,0 +1,11 @@
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/bssDB</property>
+        <property name="connection.username">group20</property>
+        <property name="connection.password">group20</property>
+
+        <!-- Other Hibernate configuration settings -->
+    </session-factory>
+</hibernate-configuration>
