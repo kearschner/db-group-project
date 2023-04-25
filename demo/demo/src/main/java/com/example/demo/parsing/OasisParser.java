@@ -133,7 +133,7 @@ public class OasisParser {
 
         Location meetingLoc;
 
-        if (notApplicableString(locationStrings[0]) || locationStrings[0].contains("OFF")) {
+        if (notApplicableString(locationStrings[0]) || locationStrings[0].contains("OFF") || locationStrings.length < 2 ){
             meetingLoc = null;
         }
         else {
@@ -208,8 +208,8 @@ public class OasisParser {
         String sectionNumber = extractString(rowNode.childNode(4));
         int credits = extractLowerCredits(extractString(rowNode.childNode(5)));
         String courseTitle = extractString(rowNode.childNode(6));
-        InstructionalMethod method = InstructionalMethod.fromString(extractString(rowNode.childNode(7)));
-        boolean permitRequired = extractString(rowNode.childNode((8))) != "";
+        String method = extractString(rowNode.childNode(7));
+        boolean permitRequired = extractString(rowNode.childNode((8))).length() != 0;
 
         String[] dateStrings = extractString(rowNode.childNode(9)).split("-");
         LocalDate startDate = parseDateWithArbitraryYear(dateStrings[0]);

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import SectionLookup from './SectionLookup/SectionLookup';
 
 test('renders learn react link', () => {
-  render(<App />);
+  render(<SectionLookup />);
   const linkElement = screen.getByText(/learn react/i);
   expect(linkElement).toBeInTheDocument();
 });

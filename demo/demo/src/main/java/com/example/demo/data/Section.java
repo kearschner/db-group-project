@@ -43,8 +43,7 @@ public final class Section {
 	private final int seatsCap;
 
 	@Column(name = "instructional_method")
-	@Enumerated(value = EnumType.STRING)
-	private final InstructionalMethod instructMethod;
+	private final String instructMethod;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "name")
@@ -75,7 +74,7 @@ public final class Section {
 				   int waitlistSlotsCap,
 				   int seatsAvailable,
 				   int seatsCap,
-				   InstructionalMethod instructMethod,
+				   String instructMethod,
 				   Instructor primaryInstructor,
 				   Set<Instructor> allInstructors,
 				   Set<Meeting> meets
@@ -135,7 +134,7 @@ public final class Section {
 		return seatsCap;
 	}
 
-	public InstructionalMethod instructMethod() {
+	public String instructMethod() {
 		return instructMethod;
 	}
 
