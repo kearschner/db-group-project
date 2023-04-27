@@ -33,6 +33,9 @@ public class SectionInitService {
     }
 
     public void populateFromOasis() throws IOException {
+
+        sectionRepository.deleteAll();
+
         Document doc = createHTMLDocFromFile("Look Up Classes.htm");
         List<Section> sections = parseSectionsFromDocument(doc);
 

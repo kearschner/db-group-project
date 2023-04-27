@@ -5,8 +5,10 @@ import com.example.demo.database.dtos.SectionLookupOutputDTO;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -31,4 +33,6 @@ public interface SectionRepository extends JpaRepository<Section, String>{
     @Cacheable("methodCache")
     @Query(value = "SELECT DISTINCT s.instructMethod FROM Section s WHERE (NOT s.instructMethod = ' ') ORDER BY s.instructMethod")
     public List<String> getInstructionalMethods();
+
+
 }

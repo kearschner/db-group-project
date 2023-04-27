@@ -1,12 +1,10 @@
 package com.example.demo.database;
 
+import com.example.demo.database.dtos.ScheduleLookupInputDTO;
+import com.example.demo.database.dtos.ScheduleLookupOutputDTO;
 import com.example.demo.database.dtos.SectionLookupInputDTO;
 import com.example.demo.database.dtos.SectionLookupOutputDTO;
-import com.example.demo.database.repositories.CourseRepository;
-import com.example.demo.database.repositories.InstructorRepository;
-import com.example.demo.database.repositories.LocationRepository;
-import com.example.demo.database.repositories.SectionRepository;
-import jakarta.persistence.Tuple;
+import com.example.demo.database.repositories.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
@@ -21,12 +19,14 @@ public class BSSRestController {
     private final CourseRepository courseRepository;
     private final LocationRepository locationRepository;
     private final SectionRepository sectionRepository;
+    private final ScheduleRepository scheduleRepository;
 
-    public BSSRestController(InstructorRepository instructorRepository, CourseRepository courseRepository, LocationRepository locationRepository, SectionRepository sectionRepository) {
+    public BSSRestController(InstructorRepository instructorRepository, CourseRepository courseRepository, LocationRepository locationRepository, SectionRepository sectionRepository, ScheduleRepository scheduleRepository) {
         this.instructorRepository = instructorRepository;
         this.courseRepository = courseRepository;
         this.locationRepository = locationRepository;
         this.sectionRepository = sectionRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
     @GetMapping("/instructors")
@@ -156,4 +156,11 @@ public class BSSRestController {
             return in;
         return new String[0];
     }
+
+
+    @PostMapping("/schedule-lookup")
+    public List<List<ScheduleLookupOutputDTO>> lookupSections(@RequestBody ScheduleLookupInputDTO scheduleInputDTO) {
+        return scheduleRepository.scheduleSearch(scheduleInputDTO.lockedCrns(), scheduleInputDTO.unlockedCrns());
+    }
+
 }

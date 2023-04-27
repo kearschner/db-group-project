@@ -28,7 +28,7 @@ $$ LANGUAGE plpgsql;;
 
 CREATE OR REPLACE  FUNCTION compositeTimes(startTime TIME, endTime TIME) RETURNS TEXT AS $$
 BEGIN
-    RETURN TO_CHAR(startTime, 'HH12:MM AM') || '-' || TO_CHAR(endTime, 'HH12:MM AM');
+    RETURN TO_CHAR(startTime, 'HH12:MI AM') || '-' || TO_CHAR(endTime, 'HH12:MI AM');
 END;
 $$ LANGUAGE plpgsql;;
 

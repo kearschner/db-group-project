@@ -30,7 +30,11 @@ public class DatabaseInit {
         Resource script = resourceLoader.getResource("classpath:sql/sectionLookupFunctions.sql");
         ScriptUtils.executeSqlScript(dataSource.getConnection(), new EncodedResource(script, "UTF-8"), false, false, ScriptUtils.DEFAULT_COMMENT_PREFIX, ";;",
                 ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER, ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
+        script = resourceLoader.getResource("classpath:sql/scheduleCreationFunctions.sql");
+        ScriptUtils.executeSqlScript(dataSource.getConnection(), new EncodedResource(script, "UTF-8"), false, false, ScriptUtils.DEFAULT_COMMENT_PREFIX, ";;",
+                ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER, ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
     }
+
 
     public void initDatabase() throws IOException, SQLException {
         initStoredProcedures();

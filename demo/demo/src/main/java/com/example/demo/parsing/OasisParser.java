@@ -13,10 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 class EmptyTextFilter implements NodeFilter {
@@ -97,7 +94,7 @@ public class OasisParser {
 
         LocalTime time = LocalTime.parse(timeParts[0]);
 
-        if (timeParts[1] == "PM") {
+        if (timeParts[1].toUpperCase(Locale.ROOT).equals("PM")) {
             return time.plusHours(12);
         }
 
