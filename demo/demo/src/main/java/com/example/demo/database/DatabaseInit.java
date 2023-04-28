@@ -35,7 +35,7 @@ public class DatabaseInit {
                 ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER, ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
     }
 
-
+    @PostConstruct
     public void initDatabase() throws IOException, SQLException {
         initStoredProcedures();
         sectionInitService.populateFromOasis();

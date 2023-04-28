@@ -10,10 +10,10 @@ public interface SectionLookupOutputDTO {
     @JsonProperty("subject")
     String getSubject();
 
-    @JsonProperty("course-number")
+    @JsonProperty("course_number")
     String getCourseNumber();
 
-    @JsonProperty("section-number")
+    @JsonProperty("section_number")
     String getSectionNumber();
 
     @JsonProperty("credits")
@@ -22,13 +22,13 @@ public interface SectionLookupOutputDTO {
     @JsonProperty("title")
     String getTitle();
 
-    @JsonProperty("instructional-method")
+    @JsonProperty("instructional_method")
     String getInstructionalMethod();
 
-    @JsonProperty("permit-req")
+    @JsonProperty("permit_req")
     Boolean getPermitReq();
 
-    @JsonProperty("term-dates")
+    @JsonProperty("term_dates")
     String getTermDates();
 
     @JsonProperty("days")
@@ -46,7 +46,7 @@ public interface SectionLookupOutputDTO {
     @JsonProperty("location")
     String getLocation();
 
-    @JsonProperty("attribute-type")
+    @JsonProperty("attribute_type")
     String getAttributes();
 
     @JsonProperty("department")
