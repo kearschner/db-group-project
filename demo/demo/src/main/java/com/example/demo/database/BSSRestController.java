@@ -1,7 +1,7 @@
 package com.example.demo.database;
 
+import com.example.demo.database.dtos.ScheduleDTO;
 import com.example.demo.database.dtos.ScheduleLookupInputDTO;
-import com.example.demo.database.dtos.ScheduleLookupOutputDTO;
 import com.example.demo.database.dtos.SectionLookupInputDTO;
 import com.example.demo.database.dtos.SectionLookupOutputDTO;
 import com.example.demo.database.repositories.*;
@@ -19,14 +19,14 @@ public class BSSRestController {
     private final CourseRepository courseRepository;
     private final LocationRepository locationRepository;
     private final SectionRepository sectionRepository;
-    private final ScheduleRepository scheduleRepository;
+    private final ScheduleService scheduleService;
 
-    public BSSRestController(InstructorRepository instructorRepository, CourseRepository courseRepository, LocationRepository locationRepository, SectionRepository sectionRepository, ScheduleRepository scheduleRepository) {
+    public BSSRestController(InstructorRepository instructorRepository, CourseRepository courseRepository, LocationRepository locationRepository, SectionRepository sectionRepository, ScheduleService scheduleService) {
         this.instructorRepository = instructorRepository;
         this.courseRepository = courseRepository;
         this.locationRepository = locationRepository;
         this.sectionRepository = sectionRepository;
-        this.scheduleRepository = scheduleRepository;
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping("/instructors")
@@ -159,8 +159,14 @@ public class BSSRestController {
 
 
     @PostMapping("/schedule-lookup")
-    public List<List<ScheduleLookupOutputDTO>> lookupSections(@RequestBody ScheduleLookupInputDTO scheduleInputDTO) {
-        return scheduleRepository.scheduleSearch(scheduleInputDTO.lockedCrns(), scheduleInputDTO.unlockedCrns());
+    public List<ScheduleDTO> lookupSchedules(@RequestBody ScheduleLookupInputDTO scheduleInputDTO) {
+        return scheduleService.getSchedules(scheduleInputDTO.lockedCrns(), scheduleInputDTO.unlockedCrns());
+    }
+
+    @PostMapping("/idklmao")
+    public void idk() {
+        var outputs = lookupSchedules(new ScheduleLookupInputDTO(new String[]{"80707", "81040", "80848"}, new String[]{"80049"}));
+        System.out.println(outputs);
     }
 
 }

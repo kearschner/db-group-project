@@ -3,10 +3,10 @@ package com.example.demo.database.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record ScheduleLookupInputDTO (
-        @JsonProperty("locked-crns[]")
+        @JsonProperty("crns[]")
         String[] lockedCrns,
 
-        @JsonProperty("unlocked-crns[]")
+        @JsonProperty("unlocked_crns[]")
         String[] unlockedCrns
 )
 { }

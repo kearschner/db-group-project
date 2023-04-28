@@ -71,8 +71,8 @@ CREATE OR REPLACE FUNCTION lookupSections(
                  times TEXT,
                  instructor TEXT,
                  campus VARCHAR(255),
-                 loc TEXT,
-                 attribs TEXT,
+                 location TEXT,
+                 attributes TEXT,
                  department VARCHAR(255)) AS $$
 BEGIN
     RETURN QUERY

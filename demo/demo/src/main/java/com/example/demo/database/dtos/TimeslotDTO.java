@@ -6,15 +6,15 @@ import java.time.LocalTime;
 
 public interface TimeslotDTO {
 
-    @JsonProperty("daysOfSlot")
-    String getDaysOfSlot();
+    @JsonProperty("room")
+    String getRoom();
 
-    @JsonProperty("loc")
-    String getLoc();
-
-    @JsonProperty("start-time")
+    @JsonProperty("startTime")
     LocalTime getStartTime();
 
-    @JsonProperty("end-time")
+    @JsonProperty("days")
+    String getDays();
+
+    @JsonProperty("endTime")
     LocalTime getEndTime();
 }

@@ -8,6 +8,7 @@ import com.example.demo.database.repositories.MeetingRepository;
 import com.example.demo.database.repositories.SectionRepository;
 import jakarta.transaction.Transactional;
 import org.jsoup.nodes.Document;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,18 +26,22 @@ public class SectionInitService {
     private final SectionRepository sectionRepository;
     private final LocationRepository locationRepository;
     private final MeetingRepository meetingRepository;
+    private final ResourceLoader resourceLoader;
 
-    public SectionInitService(SectionRepository sectionRepository, LocationRepository locationRepository, MeetingRepository meetingRepository) {
+    public SectionInitService(SectionRepository sectionRepository, LocationRepository locationRepository, MeetingRepository meetingRepository, ResourceLoader resourceLoader) {
         this.sectionRepository = sectionRepository;
         this.locationRepository = locationRepository;
         this.meetingRepository = meetingRepository;
+        this.resourceLoader = resourceLoader;
     }
 
     public void populateFromOasis() throws IOException {
 
         sectionRepository.deleteAll();
 
-        Document doc = createHTMLDocFromFile("Look Up Classes.htm");
+        var oasisFile = resourceLoader.getResource("classpath:Look Up Classes.htm").getFile();
+
+        Document doc = createHTMLDocFromFile(oasisFile);
         List<Section> sections = parseSectionsFromDocument(doc);
 
         for (Section sec : sections) {

@@ -66,7 +66,7 @@ public class OasisParser {
         for (Node childNode : node.childNodes()) {
             childrenResult += extractString(childNode);
         }
-        
+
         return childrenResult;
     }
 
@@ -94,7 +94,7 @@ public class OasisParser {
 
         LocalTime time = LocalTime.parse(timeParts[0]);
 
-        if (timeParts[1].toUpperCase(Locale.ROOT).equals("PM")) {
+        if (timeParts[1].toUpperCase(Locale.ROOT).equals("PM") && time.getHour() != 12) {
             return time.plusHours(12);
         }
 
@@ -130,14 +130,13 @@ public class OasisParser {
 
         Location meetingLoc;
 
-        if (notApplicableString(locationStrings[0]) || locationStrings[0].contains("OFF") || locationStrings.length < 2 ){
+        if (notApplicableString(locationStrings[0]) || locationStrings[0].contains("OFF") || locationStrings.length < 2) {
             meetingLoc = null;
-        }
-        else {
+        } else {
             meetingLoc = new Location(null, campus, locationStrings[0], locationStrings[1]);
         }
 
-        
+
         meetings.add(new Meeting(null, startTime, endTime, days, meetingLoc));
 
         Node nextRow = meetingRow.nextSibling();
@@ -162,9 +161,11 @@ public class OasisParser {
         return LocalDate.of(2023, Integer.parseInt(monthDay[0]), Integer.parseInt(monthDay[1]));
     }
 
-    record InstructorsParseResult(Instructor primary, Instructor[] all) {}
+    record InstructorsParseResult(Instructor primary, Instructor[] all) {
+    }
+
     public static InstructorsParseResult parseInstructors(String[] instructorStrings) {
-    
+
         Instructor primary = null;
         Instructor[] allIns = new Instructor[instructorStrings.length];
         for (int i = 0; i < allIns.length; i++) {
@@ -172,23 +173,23 @@ public class OasisParser {
             int primaryIndicator = instructorStrings[i].indexOf("(P)");
             if (primaryIndicator >= 0) {
                 currIns = new Instructor(
-                    instructorStrings[i].substring(0, primaryIndicator).trim()
+                        instructorStrings[i].substring(0, primaryIndicator).trim()
                 );
                 primary = currIns;
             } else {
                 currIns = new Instructor(
-                    instructorStrings[i].trim()
+                        instructorStrings[i].trim()
                 );
             }
             allIns[i] = currIns;
         }
-        
+
         return new InstructorsParseResult(primary, allIns);
     }
 
     public static List<String> parseAttributes(String[] attributeStrings) {
 
-        List<String> allAtrib= new ArrayList<>(attributeStrings.length);
+        List<String> allAtrib = new ArrayList<>(attributeStrings.length);
         for (String atrib : attributeStrings) {
             allAtrib.add(atrib.trim());
         }
@@ -196,7 +197,9 @@ public class OasisParser {
         return allAtrib;
     }
 
-    record SectionResult(Section sec, int numMeets) {}
+    record SectionResult(Section sec, int numMeets) {
+    }
+
     public static SectionResult getSection(Node rowNode, String department) {
 
         String crn = extractString(rowNode.childNode(1));
@@ -233,19 +236,12 @@ public class OasisParser {
         return new SectionResult(new Section(crn, course, sectionNumber, startDate, endDate, waitAvail, waitCap, seatAvail, seatCap, method, instructorsResults.primary(), Set.of(instructorsResults.all()), new HashSet<>(meetings)), meetings.size());
 
 
-
-
-
-
     }
 
 
+    public static Document createHTMLDocFromFile(File file) throws IOException {
 
-    public static Document createHTMLDocFromFile(String filePath) throws IOException{
-
-        File input = new File(filePath);
-        
-        return Jsoup.parse(input, "UTF-8", "");
+        return Jsoup.parse(file, "UTF-8", "");
     }
 
     public static Node getCleanTableBody(Document fromDoc) {
@@ -263,7 +259,7 @@ public class OasisParser {
         List<Section> sections = new ArrayList<>();
 
         Node tableBody = getCleanTableBody(sectionDoc);
-        
+
 
         String activeDepartment = "";
 
@@ -276,7 +272,7 @@ public class OasisParser {
                     activeDepartment = getDepartment(rowNode);
                     break;
                 case CONTENT:
-                    SectionResult result= getSection(rowNode, activeDepartment);
+                    SectionResult result = getSection(rowNode, activeDepartment);
                     sections.add(result.sec());
                     i += (result.numMeets() - 1); // Skip rows that have been processed for meetings
                     break;
@@ -291,13 +287,4 @@ public class OasisParser {
         return sections;
     }
 
-    public static void main(String[] args) throws Exception {
-
-        Document doc = createHTMLDocFromFile("Look Up Classes.htm");
-
-        List<Section> sections = parseSectionsFromDocument(doc);
-
-        System.out.println(sections.size());
-
-    }
 }

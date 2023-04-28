@@ -23,14 +23,16 @@ function SectionLookupResults() {
       .catch((error) => console.error(error));
   }, [secFormData]);
 
-  const handleAddSectionOnly = (crn) => {
-    console.log('Add section only for CRN:', crn);
-    // Implement your logic for adding the section only
+  const handleAddSectionOnly = (row) => {
+      // Implement functionality for "Add section only" button
+      document.cookie = `locked=${[row.crn, row.subject, row.course_number].join(' ')};path=/`;
+      console.log('Add section only button clicked', document.cookie);
   };
 
-  const handleAddCourse = (crn) => {
-    console.log('Add course for CRN:', crn);
-    // Implement your logic for adding the entire course
+  const handleAddCourse = (row) => {
+      // Implement functionality for "Add course" button
+      console.log('Add course button clicked', row);
+      document.cookie = `unlocked=${row.crn};unlcourse=${row.subject + ' ' + row.course_number};path=/`;
   };
 
   const rows = [];
@@ -54,13 +56,16 @@ function SectionLookupResults() {
         <td>{isDuplicate ? '' : row.campus}</td>
         <td>{isDuplicate ? '' : row.location}</td>
         <td>{isDuplicate ? '' : row.attribute_type}</td>
-        <td>
-          <button onClick={() => handleAddSectionOnly(row.crn)}>
-            Add section only
-          </button>
-          <button onClick={() => handleAddCourse(row.crn)}>
-            Add course
-          </button>
+        <td>{isDuplicate ? '' :
+            <div>
+                <button onClick={() => handleAddSectionOnly(row)}>
+                    Add section only
+                </button>
+                <button onClick={() => handleAddCourse(row)}>
+                    Add course
+                </button>
+            </div>
+        }
         </td>
       </tr>
     );
