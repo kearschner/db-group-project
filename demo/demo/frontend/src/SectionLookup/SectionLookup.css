@@ -1,7 +1,23 @@
-/* src/SectionLookup.css */
 .App {
-  text-align: left;
-  padding: 2em;
+  display: flex;
+  padding: 1em;
+}
+
+.form-container {
+  display: flex;
+}
+
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 2em;
+  border-right: 2px solid #4CAF50; /* Add this line */
+
+}
+
+.form-content {
+  flex-grow: 1;
 }
 
 .form-group {

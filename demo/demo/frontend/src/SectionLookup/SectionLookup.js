@@ -2,6 +2,7 @@
 import './SectionLookup.css';
 import LookupSelect from './LookupSelect';
 import useSimpleGet from "./useSimpleGet";
+import Cart from '../Cart';
 
 import { useState} from 'react';
 import {useNavigate} from "react-router-dom";
@@ -10,7 +11,6 @@ import {useNavigate} from "react-router-dom";
 function SectionLookup() {
 
     const [secFormData, setSecFormData] = useState({});
-
     const instructors = useSimpleGet('/api/instructors');
     const departments = useSimpleGet('/api/departments');
     const subjects = useSimpleGet('/api/subjects');
@@ -18,12 +18,12 @@ function SectionLookup() {
     const instructionalMethods = useSimpleGet('/api/instructional-methods');
     const attributes = useSimpleGet('/api/attributes');
 
-    let navigate = useNavigate();
+    const user = {
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+    };
 
-    function handleNavToScheduleLookup(event) {
-        event.preventDefault();
-        navigate('/schedule-lookup');
-    }
+    let navigate = useNavigate();
 
     function handleSectionLookupSubmit(event) {
         event.preventDefault();
@@ -66,6 +66,10 @@ function SectionLookup() {
         <div className="App">
             <header className="App-header">
                 <div className="form-container">
+                    <div className="cart-container">
+                        <Cart title="Original Cart" user={user} />
+                    </div>
+                    <div className="divider"></div>
                     <form onSubmit={handleSectionLookupSubmit}>
                         <LookupSelect contents={subjects} id="subject" label="Subject" size={4} changeHandler={handleSecFormChangeSelection}/>
                         <div className="form-group">
@@ -88,7 +92,7 @@ function SectionLookup() {
                         <LookupSelect contents={instructors} id="instructor" label="Instructor" size={4} changeHandler={handleSecFormChangeSelection}/>
                         <LookupSelect contents={attributes} id="attributes" label="Attributes" size={4} changeHandler={handleSecFormChangeSelection}/>
                         <div className="form-group">
-                            <label htmlFor="start-time" style={{ width: '200px', display: 'inline-block' }}>Start Time:</label>
+                            <label htmlFor="start-time" style={{ width: '130px', display: 'inline-block' }}>Start Time:</label>
                             <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                                 <div style={{ display: 'inline-flex', alignItems: 'center', marginRight: '15px' }}>
                                     <label htmlFor="start-time-hour" style={{ fontSize: '12px', marginRight: '-170px', marginLeft: '74px'  }}>Hour:</label>
@@ -141,7 +145,7 @@ function SectionLookup() {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="end-time" style={{ width: '200px', display: 'inline-block' }}>End Time:</label>
+                            <label htmlFor="end-time" style={{ width: '130px', display: 'inline-block' }}>End Time:</label>
                             <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                                 <div style={{ display: 'inline-flex', alignItems: 'center', marginRight: '15px' }}>
                                     <label htmlFor="end-time-hour" style={{ fontSize: '12px', marginRight: '-170px', marginLeft: '74px' }}>Hour:</label>
@@ -194,10 +198,10 @@ function SectionLookup() {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="days" style={{ width: '200px', display: 'inline-block' }}>Days:</label>
+                            <label htmlFor="days" style={{ width: '130px', display: 'inline-block' }}>Days:</label>
                             <div style={{ display: 'inline-flex', alignItems: 'center' }}>
                                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
-                                    <div key={index} style={{ marginRight: '-100px', display: 'inline-flex', alignItems: 'center' }}>
+                                    <div key={index} style={{ marginRight: '-211px', display: 'inline-flex', alignItems: 'center' }}>
                                         <input
                                             type="checkbox"
                                             id={`day-${index}`}
@@ -216,18 +220,16 @@ function SectionLookup() {
                                 <button type="reset" onClick={handleResetSecForm}>Reset</button>
                             </div>
                         </div>
-
-
-
-
                     </form>
-                    <div>
-                        <button onClick={handleNavToScheduleLookup}>Checkout</button>
-                    </div>
                 </div>
+
             </header>
+
         </div>
+
     );
+
+
 }
 
 export default SectionLookup;
