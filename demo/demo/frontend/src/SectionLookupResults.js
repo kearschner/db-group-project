@@ -25,12 +25,20 @@ function SectionLookupResults() {
     // Event handlers for button clicks
     const handleAddSectionOnly = (section) => {
         // Implement functionality for "Add section only" button
+        document.cookie = `lcrn=${section.crn};lcourse=${section.course};path=/`;
         console.log('Add section only button clicked', section);
     };
 
     const handleAddCourse = (section) => {
         // Implement functionality for "Add course" button
         console.log('Add course button clicked', section);
+        for(let i = 0; i < sectionData.length; i++)
+        {
+            if((sectionData[i].course === section.course) && (sectionData[i].crn !== section.crn))
+            {
+                document.cookie = `unlcrn=${section.crn};unlcourse=${section.course};path=/`;
+            }
+        }
     };
 
     const renderTableHeader = () => (
