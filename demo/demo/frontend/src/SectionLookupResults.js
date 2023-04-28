@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import {getCookie, setCookie, appendToCookie} from './CookieHelper'
 
 function SectionLookupResults() {
   const location = useLocation();
@@ -18,21 +19,27 @@ function SectionLookupResults() {
       .then((response) => response.json())
       .then((data) => {
         setSectionData(data);
-        console.log(data);
       })
       .catch((error) => console.error(error));
   }, [secFormData]);
 
   const handleAddSectionOnly = (row) => {
       // Implement functionality for "Add section only" button
-      document.cookie = `locked=${[row.crn, row.subject, row.course_number].join(' ')};path=/`;
-      console.log('Add section only button clicked', document.cookie);
+      let currentLocked = getCookie("locked");
+      if (currentLocked.includes(row.crn))
+          return;
+
+      appendToCookie("locked", [row.crn, row.subject, row.course_number].join(' '));
+      console.log(document.cookie);
   };
 
   const handleAddCourse = (row) => {
       // Implement functionality for "Add course" button
-      console.log('Add course button clicked', row);
-      document.cookie = `unlocked=${row.crn};unlcourse=${row.subject + ' ' + row.course_number};path=/`;
+      let currentUnlocked = getCookie("unlocked");
+      if (currentUnlocked.includes(row.subject + ' ' + row.course_number))
+          return;
+      appendToCookie("unlocked", [row.crn, row.subject, row.course_number].join(' '));
+      console.log(document.cookie);
   };
 
   const rows = [];

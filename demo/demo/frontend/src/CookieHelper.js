@@ -1,17 +1,30 @@
-function getCookie(cookieName) {
-    let fullName = cookieName + "=";
+export function getCookie(cookieName) {
+    let name = cookieName + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(";");
     for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
     }
 
-
+    return "";
 }
 
 
-function appendToCooke(cookieName, value) {
+export function appendToCookie(cookieName, value) {
 
+    let cookieValues = getCookie(cookieName).split(",");
+    cookieValues.push(value);
 
+    document.cookie = `${cookieName + "=" + cookieValues.join(',')};path=/`
 
+}
+
+export function setCookie(cookieName, value) {
+    document.cookie = `${cookieName + "=" + value};path=/`
 }
