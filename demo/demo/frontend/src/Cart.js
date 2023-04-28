@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Cart.css';
+import {getCookie, setCookie, appendToCookie, clearCookie} from './CookieHelper'
+import {useNavigate} from "react-router-dom";
 
 function Cart({ title, children, onClear }) {
     return (
@@ -20,29 +22,38 @@ function Course({ crn, number }) {
     );
 }
 
-export default function App() {
-    const [courses, setCourses] = useState([
-        { crn: "12345", number: "CS101" },
-        { crn: "67890", number: "MATH201" },
-        { crn: "32146", number: "COP3540" },
-    ]);
+function extractCourses(fromCookie) {
+    let cookieString = getCookie(fromCookie);
+    let values = cookieString.split(",");
+    let crns = [];
+    if (cookieString === '') return crns;
+    for (const value of values) {
+        let crn = value.split(' ')[0];
+        let cour = value.split(' ')[2]
+        if (crn === "" || cour === "") continue;
+        crns.push(crn + " " + cour)
+    }
+    return crns;
+}
 
-    const [courses2, setCourses2] = useState([
-        { crn: "98765", number: "ENGL101" },
-        { crn: "56789", number: "BIO202" },
-        { crn: "65432", number: "HIST150" },
-    ]);
+export default function App() {
+
+    let courses = extractCourses("unlocked");
+    let courses2 = extractCourses("locked");
 
     const clearCart = (cartIndex) => {
         if (cartIndex === 1) {
-            setCourses([]);
+            courses = [];
+            clearCookie("unlocked");
         } else if (cartIndex === 2) {
-            setCourses2([]);
+            courses2 = [];
+            clearCookie("locked");
         }
     };
 
+    const navigate = useNavigate();
     const checkout = () => {
-        console.log("Proceeding to checkout...");
+        navigate("/schedule-lookup")
     };
 
     return (
@@ -52,11 +63,11 @@ export default function App() {
                     title="Locked CRNS"
                     onClear={() => clearCart(1)}
                 >
-                    {courses.map(course => (
+                    {courses.map((val,index) => (
                         <Course
-                            key={course.crn}
-                            crn={course.crn}
-                            number={course.number}
+                            key={val.split(" ")[0]}
+                            crn={val.split(" ")[0]}
+                            number={val.split(" ")[1]}
                         />
                     ))}
                 </Cart>
@@ -64,11 +75,11 @@ export default function App() {
                     title="Unlocked CRNS"
                     onClear={() => clearCart(2)}
                 >
-                    {courses2.map(course => (
+                    {courses2.map((val,index) => (
                         <Course
-                            key={course.crn}
-                            crn={course.crn}
-                            number={course.number}
+                            key={val.split(" ")[0]}
+                            crn={val.split(" ")[0]}
+                            number={val.split(" ")[1]}
                         />
                     ))}
                 </Cart>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import {getCookie, setCookie, appendToCookie} from '../CookieHelper';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {getCookie, setCookie, appendToCookie, clearCookie} from '../CookieHelper';
 import Schedule from "./schedule";
 
 function ScheduleLookup() {
@@ -55,14 +55,36 @@ function ScheduleLookup() {
       }
   };
 
+  const navigate = useNavigate();
+  const handleReturnHome = (event) => {
+      event.preventDefault();
+      clearCookie("locked");
+      clearCookie("unlocked");
+      navigate("/schedule-lookup");
+    }
+
+  if (schedules.length === 0) {
+      return (
+          <div>
+              <p>No schedules found with your course selections</p>
+              <button onClick={handleReturnHome}>Return Home</button>
+          </div>
+      )
+  }
+
   return (
       <div>
           <div>
-              <button onClick={handlePrevClick}>Prev</button>
-              <p>Viewing Schedule {currentIndex + 1} of {schedules.length}</p>
-              <button onClick={handleNextClick}>Next</button>
+              <table>
+                  <tr>
+                      <td><button onClick={handlePrevClick}>Prev</button></td>
+                      <td>Viewing Schedule {currentIndex + 1} of {schedules.length}</td>
+                      <td><button onClick={handleNextClick}>Next</button></td>
+                  </tr>
+              </table>
           </div>
           {schedules[currentIndex]}
+          <button onClick={handleReturnHome}>Return Home</button>
       </div>
   );
 }

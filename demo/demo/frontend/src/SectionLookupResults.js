@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {getCookie, setCookie, appendToCookie} from './CookieHelper'
+import Cart from "./Cart";
 
 function SectionLookupResults() {
   const location = useLocation();
@@ -76,30 +77,63 @@ function SectionLookupResults() {
     );
   });
 
+  const navigate = useNavigate();
+  const handleGoHome = (event) => {
+      event.preventDefault();
+      navigate("/");
+  }
+
+  const handleCheckout = (event) => {
+      event.preventDefault();
+      navigate("/schedule-lookup");
+  }
+
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>CRN</th>
-            <th>Subj</th>
-            <th>Crse</th>
-            <th>Sec</th>
-            <th>Cred</th>
-            <th>Title</th>
-            <th>Instructional Method</th>
-            <th>Days</th>
-            <th>Time</th>
-            <th>Instructor</th>
-            <th>Campus</th>
-            <th>Location</th>
-            <th>Attribute Type</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
-    </div>
+      <div>
+          <div>
+              <table>
+                  <tr>
+                      <td><button onClick={handleGoHome}>Go Home</button></td>
+                      <td><button onClick={handleCheckout}>Checkout Schedule</button></td>
+                  </tr>
+              </table>
+          </div>
+          <div className="App">
+              <header className="App-header">
+                  <div className="form-container">
+                      <div className="cart-container">
+                          <Cart title="Original Cart" user={""} />
+                      </div>
+                      <div className="divider"></div>
+                      <div>
+                          <table>
+                              <thead>
+                              <tr>
+                                  <th>CRN</th>
+                                  <th>Subj</th>
+                                  <th>Crse</th>
+                                  <th>Sec</th>
+                                  <th>Cred</th>
+                                  <th>Title</th>
+                                  <th>Instructional Method</th>
+                                  <th>Days</th>
+                                  <th>Time</th>
+                                  <th>Instructor</th>
+                                  <th>Campus</th>
+                                  <th>Location</th>
+                                  <th>Attribute Type</th>
+                                  <th>Actions</th>
+                              </tr>
+                              </thead>
+                              <tbody>{rows}</tbody>
+                          </table>
+                      </div>
+                  </div>
+
+              </header>
+
+          </div>
+      </div>
   );
 }
 

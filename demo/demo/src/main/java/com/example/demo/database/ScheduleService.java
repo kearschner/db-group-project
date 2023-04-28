@@ -4,7 +4,6 @@ import com.example.demo.database.dtos.FixedScheduleComponentDTO;
 import com.example.demo.database.dtos.ScheduleComponentDTO;
 import com.example.demo.database.dtos.ScheduleDTO;
 import com.example.demo.database.repositories.ScheduleRepository;
-import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

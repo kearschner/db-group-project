@@ -12,10 +12,10 @@ const colors = [
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const startHour = 8;
-const endHour = 18;
+const endHour = 22;
 const rowGap = 10;
 const gridWidth = 1200; // in pixels
-const gridHeight = 800; // in pixels
+const gridHeight = 1200; // in pixels
 const dayWidth = gridWidth / days.length;
 const hourHeight = gridHeight / (endHour - startHour);
 const labelMargin = 45;
@@ -345,6 +345,7 @@ const Schedule = (props) => {
                 {dayLabels}
             </div>
             <div>
+                <br/><br/><br/><br/>
                 <h2>Asynchronous Classes:</h2>
                 {
                     asyncClasses.map(value => (

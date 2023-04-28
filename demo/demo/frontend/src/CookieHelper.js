@@ -32,3 +32,43 @@ export function setCookie(cookieName, value) {
 export function clearCookie(cookieName) {
     document.cookie = `${cookieName + "="};path=/`
 }
+
+export function Getlcrn(cookieName) {
+
+    var astring;
+    let ca = getCookie(cookieName).split(",");
+    for (let i = 0; i < ca.length; i+3) {
+        astring += ca[i] + ",";
+    }
+    return astring;
+}
+
+export function Getlcourse(cookieName) {
+
+    var astring;
+    let ca = getCookie(cookieName).split(",");
+    for (let i = 2; i < ca.length; i+3) {
+        astring += ca[i] + ",";
+    }
+    return astring;
+}
+
+export function Getunlcrn(cookieName) {
+
+    var astring;
+    let ca = getCookie(cookieName).split(",");
+    for (let i = 0; i < ca.length; i+2) {
+        astring += ca[i] + ",";
+    }
+    return astring;
+}
+
+export function Getunlcourse(cookieName) {
+
+    var astring;
+    let ca = getCookie(cookieName).split(",");
+    for (let i = 1; i < ca.length; i+2) {
+        astring += ca[i] + ",";
+    }
+    return astring;
+}

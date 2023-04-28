@@ -23,7 +23,7 @@ function SectionLookup() {
         email: 'johndoe@example.com',
     };
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     function handleSectionLookupSubmit(event) {
         event.preventDefault();

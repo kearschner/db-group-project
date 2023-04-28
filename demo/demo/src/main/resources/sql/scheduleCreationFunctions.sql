@@ -106,13 +106,13 @@ CREATE OR REPLACE FUNCTION unionOnAllDays(newCRN VARCHAR, prevTimes timemultiran
     DECLARE newTimes timemultirange[7] := (SELECT times FROM section WHERE crn = newCRN);
     BEGIN
         RETURN ARRAY[
-            newTimes[0] + prevTimes[0],
             newTimes[1] + prevTimes[1],
             newTimes[2] + prevTimes[2],
             newTimes[3] + prevTimes[3],
             newTimes[4] + prevTimes[4],
             newTimes[5] + prevTimes[5],
-            newTimes[6] + prevTimes[6]
+            newTimes[6] + prevTimes[6],
+            newTimes[7] + prevTimes[7]
         ];
     END;
 $$ LANGUAGE plpgsql;;
@@ -162,6 +162,7 @@ BEGIN
                 WHERE
                     NOT retrieve_course(b.crn) = ANY(a.accCourses) AND
                     NOT anyTimesOverlap(b.crn, a.accTimes)
+                LIMIT 255
             )
         )
         SELECT sch1.accCRNs
@@ -198,24 +199,6 @@ AS $$
     END;
 $$ LANGUAGE plpgsql;;
 
-CREATE OR REPLACE FUNCTION buckets_test(locked_crns VARCHAR[], unlocked_crns VARCHAR[])
-    RETURNS crnbucket[]
-AS $$
-DECLARE
-    unlocked_crn_sets crnbucket[];
-    locked_crn_sets crnbucket[];
-BEGIN
-    unlocked_crn_sets := ARRAY(
-            SELECT getUnlockedCRNSet(crn) FROM unnest(unlocked_crns) AS u_crn(crn)
-        );
-    locked_crn_sets := ARRAY(
-            SELECT ROW(ARRAY[crn])::crnbucket FROM unnest(locked_crns) AS l_crn(crn) WHERE NOT (crn =ANY(SELECT * FROM spill_buckets(unlocked_crn_sets)))
-        );
-    RETURN unlocked_crn_sets || locked_crn_sets;
-END;
-$$ LANGUAGE plpgsql;;
-
-
 CREATE OR REPLACE FUNCTION timeslots_from_crn(schedCrn VARCHAR) RETURNS TABLE (days VARCHAR, room TEXT, startTime TIME, endTime TIME) AS $$
     BEGIN
         RETURN QUERY SELECT m.days, l.building || ' ' || l.room_number, m.start_time, m.end_time
@@ -228,24 +211,6 @@ CREATE OR REPLACE FUNCTION fixed_schedule_component_from_crn(schedCrn VARCHAR) R
     BEGIN
         RETURN QUERY SELECT target_subject || ' ' || target_course_number, name FROM section WHERE crn = schedCrn;
     END;
-$$ LANGUAGE plpgsql;;
-
-CREATE OR REPLACE FUNCTION schedule_components_from_array(bucket varchar[]) RETURNS schedulecomponent[] AS $$
-    BEGIN
-        RETURN (
-            WITH c(value) AS (SELECT unnest(bucket))
-                SELECT array_agg(schedule_component_from_crn(value)) FROM c
-        );
-    END;
-$$ LANGUAGE plpgsql;;
-
-CREATE OR REPLACE FUNCTION lookup_schedule_components(locked_crns VARCHAR[], unlocked_crns VARCHAR[])
-    RETURNS SETOF schedulecomponent[] AS $$
-DECLARE
-BEGIN
-    RETURN QUERY
-        SELECT schedule_components_from_array(scheduleBucket) FROM generate_raw_schedules_expanded(locked_crns, unlocked_crns) AS scheduleBucket;
-END;
 $$ LANGUAGE plpgsql;;
 
 CREATE OR REPLACE FUNCTION comma_sep_crns(crns VARCHAR[]) RETURNS TEXT AS $$
