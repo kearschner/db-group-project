@@ -160,7 +160,8 @@ public class BSSRestController {
 
     @PostMapping("/schedule-lookup")
     public List<ScheduleDTO> lookupSchedules(@RequestBody ScheduleLookupInputDTO scheduleInputDTO) {
-        return scheduleService.getSchedules(scheduleInputDTO.lockedCrns(), scheduleInputDTO.unlockedCrns());
+        var out = scheduleService.getSchedules(scheduleInputDTO.locked(), scheduleInputDTO.unlocked());
+        return out;
     }
 
     @PostMapping("/idklmao")

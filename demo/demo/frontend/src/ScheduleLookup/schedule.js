@@ -2,7 +2,15 @@ import React from 'react';
 import { Container, Typography, Paper, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const colors = [
+    '#ffcc80',
+    '#80b3ff',
+    '#cc6872',
+    '#a3be8c',
+    '#b48ead',
+    '#d08770']
+
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const startHour = 8;
 const endHour = 18;
 const rowGap = 10;
@@ -11,6 +19,56 @@ const gridHeight = 800; // in pixels
 const dayWidth = gridWidth / days.length;
 const hourHeight = gridHeight / (endHour - startHour);
 const labelMargin = 45;
+
+
+function expandDay(short) {
+    var fullDays = [];
+    if (short.includes("M"))
+        fullDays.push(days[0]);
+    if (short.includes("T"))
+        fullDays.push(days[1]);
+    if (short.includes("W"))
+        fullDays.push(days[2]);
+    if (short.includes("R"))
+        fullDays.push(days[3]);
+    if (short.includes("F"))
+        fullDays.push(days[4]);
+    if (short.includes("S"))
+        fullDays.push(days[5]);
+    if (short.includes("U"))
+        fullDays.push(days[6]);
+    // May need to add more days here (Sat and Sun)
+    return fullDays;
+}
+
+function constructClasses(component, id, color) {
+    const meetingClasses = [];
+    let asyncClass = null;
+    component.slots.forEach((slot, slotIndex) => {
+        expandDay(slot.days).forEach((fullDay, dayIndex) => {
+            const startSplit = slot.startTime.split(":");
+            const endSplit = slot.endTime.split(":");
+            meetingClasses.push({
+                id: id + '-' + slotIndex.toString() + '-' + dayIndex.toString(),
+                name: component.crn,
+                building: slot.room,
+                day: fullDay,
+                startTime: { h: parseInt(startSplit[0]), m: parseInt(startSplit[1])},
+                endTime: {h: parseInt(endSplit[0]), m: parseInt(endSplit[1])},
+                professor: component.primaryIns,
+                courseNumber: component.course,
+                color: color});
+        });
+    });
+    if (meetingClasses.length === 0) {
+        asyncClass = {
+            name: component.crn,
+            professor: component.primaryIns,
+            courseNumber: component.course
+        }
+    }
+    return {meetingClasses, asyncClass};
+}
 
 const classes = [
     { id: 1, name: 'Math', building: 'Building A', day: 'Monday', startTime: { h: 9, m: 15 }, endTime: { h: 10, m: 30 }, professor: 'John Smith', courseNumber: 'MAT101', color: '#ffcc80' },
@@ -58,22 +116,26 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center', // Centered text
     },
     courseInfo: {
-        fontSize: '1.2rem',
+        fontSize: '1.0rem',
         fontWeight: 'bold',
         color: '#333',
     },
     professorName: {
-        fontSize: '0.9rem', // Decreased professor name font size
+        fontSize: '0.7rem', // Decreased professor name font size
         color: '#333',
     },
     classTime: {
-        fontSize: '0.8rem', // Decreased class time font size
+        fontSize: '0.6rem', // Decreased class time font size
         color: '#333',
     },
     buildingName: {
-        fontSize: '0.8rem',
+        fontSize: '0.6rem',
         color: '#333',
     },
+    courseCrn: {
+        fontSize: '0.6rem',
+        color: '#333',
+    }
 }));
 
 const heightAdjustment = 20; // Adjust this value to increase the height of the boxes
@@ -109,6 +171,9 @@ const ClassCard = ({ classItem, top, left, width, height }) => {
                 </Typography>
                 <Typography className={classes.professorName}>
                     {classItem.professor}
+                </Typography>
+                <Typography className={classes.courseCrn}>
+                    {classItem.name}
                 </Typography>
             </Box>
 
@@ -184,8 +249,21 @@ const ScheduleGrid = () => {
 };
 
 
-const Schedule = () => {
-    const classBoxes = classes.map((classItem) => {
+const Schedule = (props) => {
+    console.log(props);
+
+    const components = props.components;
+    let scheduleClasses = [];
+    let asyncClasses = [];
+    for (let i = 0; i < components.length; i++) {
+        let classes = constructClasses(components[i], props.index.toString() + '-' + i.toString(), colors[i % colors.length]);
+        scheduleClasses.push(...classes.meetingClasses);
+        if (classes.asyncClass != null)
+            asyncClasses.push(classes.asyncClass);
+    }
+    console.log(scheduleClasses);
+    
+    const classBoxes = scheduleClasses.map((classItem) => {
         const dayIndex = days.indexOf(classItem.day);
         const startTimeInMinutes = classItem.startTime.h * 60 + classItem.startTime.m;
         const endTimeInMinutes = classItem.endTime.h * 60 + classItem.endTime.m;
@@ -252,35 +330,31 @@ const Schedule = () => {
     });
 
     return (
-        <div style={{
-            position: 'relative',
-            top: '65px', // Change the top value to 65px
-            width: `${gridWidth + labelMargin}px`,
-            height: `${gridHeight + labelMargin}px`,
-            border: '2px solid black',
-            borderRadius: '10px' }}>
-            <ScheduleGrid />
-            {timeLabels}
-            {lineComponents}
-            {classBoxes}
-            {dayLabels}
+        <div>
+            <div style={{
+                position: 'relative',
+                top: '65px', // Change the top value to 65px
+                width: `${gridWidth + labelMargin}px`,
+                height: `${gridHeight + labelMargin}px`,
+                border: '2px solid black',
+                borderRadius: '10px' }}>
+                <ScheduleGrid />
+                {timeLabels}
+                {lineComponents}
+                {classBoxes}
+                {dayLabels}
+            </div>
+            <div>
+                <h2>Asynchronous Classes:</h2>
+                {
+                    asyncClasses.map(value => (
+                        <p><b>{value.courseNumber}</b> | {value.professor} | {value.name}</p>
+                    ))
+                }
+            </div>
         </div>
     );
-
-
 
 };
 
-
-function App() {
-    return (
-        <div className="App">
-            <Container maxWidth="lg">
-                <Schedule />
-            </Container>
-        </div>
-    );
-}
-
-export default App;
-
+export default Schedule;

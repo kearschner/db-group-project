@@ -165,7 +165,6 @@ BEGIN
             )
         )
         SELECT sch1.accCRNs
-
         FROM accumulateSchedules sch1 LEFT JOIN accumulateSchedules sch2
             ON (sch1.accCRNs <@ sch2.accCRNs) AND (NOT sch1.accCRNs @> sch2.accCRNs)
             WHERE sch2.accCRNs IS NULL;

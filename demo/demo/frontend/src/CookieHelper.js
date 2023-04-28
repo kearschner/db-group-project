@@ -28,3 +28,7 @@ export function appendToCookie(cookieName, value) {
 export function setCookie(cookieName, value) {
     document.cookie = `${cookieName + "=" + value};path=/`
 }
+
+export function clearCookie(cookieName) {
+    document.cookie = `${cookieName + "="};path=/`
+}

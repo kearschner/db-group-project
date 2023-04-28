@@ -65,6 +65,4 @@ public class ScheduleService {
         return dtos;
     }
 
-
-
 }

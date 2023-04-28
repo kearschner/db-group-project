@@ -30,7 +30,6 @@ function SectionLookupResults() {
           return;
 
       appendToCookie("locked", [row.crn, row.subject, row.course_number].join(' '));
-      console.log(document.cookie);
   };
 
   const handleAddCourse = (row) => {
@@ -39,7 +38,6 @@ function SectionLookupResults() {
       if (currentUnlocked.includes(row.subject + ' ' + row.course_number))
           return;
       appendToCookie("unlocked", [row.crn, row.subject, row.course_number].join(' '));
-      console.log(document.cookie);
   };
 
   const rows = [];

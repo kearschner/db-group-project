@@ -20,6 +20,11 @@ function SectionLookup() {
 
     let navigate = useNavigate();
 
+    function handleNavToScheduleLookup(event) {
+        event.preventDefault();
+        navigate('/schedule-lookup');
+    }
+
     function handleSectionLookupSubmit(event) {
         event.preventDefault();
         navigate('/sec-lookup-results', {state: secFormData});
@@ -216,6 +221,9 @@ function SectionLookup() {
 
 
                     </form>
+                    <div>
+                        <button onClick={handleNavToScheduleLookup}>Checkout</button>
+                    </div>
                 </div>
             </header>
         </div>
